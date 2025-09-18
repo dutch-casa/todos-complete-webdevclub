@@ -1,12 +1,12 @@
 /**
  * EDIT TODO PAGE - Clean Architecture in Action
- * 
+ *
  * What this demonstrates:
  * - Using our custom hook for data fetching and updates
  * - Clean error handling and loading states
  * - Type-safe component with proper TypeScript
  * - Separation of concerns - page focuses on UI, hook handles data
- * 
+ *
  * Notice how the component doesn't need to know about storage,
  * services, or complex state management - the hook abstracts it all!
  */
@@ -54,9 +54,9 @@ export default function EditTodo() {
 
   // Use our magic hook to get todo data and operations
   const { todos, loading, error, updateTodo } = useTodos();
-  
+
   // Find the specific todo we're editing
-  const todoToEdit = todos.find(todo => todo.id === id);
+  const todoToEdit = todos.find((todo) => todo.id === id);
 
   /**
    * Load todo data into form when component mounts or todo data changes
@@ -96,11 +96,13 @@ export default function EditTodo() {
       };
 
       await updateTodo(id, updateData);
-      
+
       // Navigate back to home on success
       router.push("/");
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Failed to update todo");
+      setFormError(
+        err instanceof Error ? err.message : "Failed to update todo"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -133,9 +135,12 @@ export default function EditTodo() {
         <div className="p-4 space-y-4 border rounded-lg bg-white shadow">
           <div className="text-center">
             <div className="text-red-500 mb-4">Error: {error}</div>
-            <Button onClick={() => router.push("/")} className="w-full">
+            <button
+              onClick={() => router.push("/")}
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
               Return Home
-            </Button>
+            </button>
           </div>
         </div>
       </div>
@@ -148,15 +153,14 @@ export default function EditTodo() {
       <div className="max-w-md mx-auto p-4">
         <div className="p-4 space-y-4 border rounded-lg bg-white shadow">
           <div className="text-center">
-            <div className="text-red-500 mb-4 text-6xl font-black">
-              404
-            </div>
-            <div className="text-gray-600 mb-4">
-              Todo not found
-            </div>
-            <Button onClick={() => router.push("/")} className="w-full">
+            <div className="text-red-500 mb-4 text-6xl font-black">404</div>
+            <div className="text-gray-600 mb-4">Todo not found</div>
+            <button
+              onClick={() => router.push("/")}
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
               Return Home
-            </Button>
+            </button>
           </div>
         </div>
       </div>
@@ -192,7 +196,7 @@ export default function EditTodo() {
             <label htmlFor="title" className="block text-sm font-medium mb-1">
               Title *
             </label>
-            <Input
+            <input
               id="title"
               type="text"
               value={title}
@@ -201,6 +205,7 @@ export default function EditTodo() {
               disabled={isSubmitting}
               maxLength={200}
               required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
             />
             <div className="text-xs text-gray-500 mt-1">
               {title.length}/200 characters
@@ -209,10 +214,13 @@ export default function EditTodo() {
 
           {/* Description input */}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium mb-1"
+            >
               Description
             </label>
-            <Input
+            <input
               id="description"
               type="text"
               value={description}
@@ -220,6 +228,7 @@ export default function EditTodo() {
               placeholder="Additional details (optional)"
               disabled={isSubmitting}
               maxLength={500}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
             />
             <div className="text-xs text-gray-500 mt-1">
               {description.length}/500 characters
