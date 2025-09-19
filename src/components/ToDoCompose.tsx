@@ -16,9 +16,10 @@
 
 "use client";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import TodoInput from "@/components/TodoInput";
+import TodoActions from "@/components/TodoActions";
 import ToDoCard from "@/components/ToDoCard";
-import DeleteCompleted from "@/components/DeleteCompleted";
 import { useTodos } from "@/hooks/useTodos";
 import { CreateTodoData } from "@/types/Todo";
 
@@ -104,6 +105,9 @@ export default function TodoApp() {
     router.push(`/edit/${id}`);
   };
 
+  // Performance optimization: memoize stats calculation (must be before early returns)
+  const stats = useMemo(() => getStats(), [getStats]);
+
   // Show loading state
   if (loading) {
     return <TodoSkeleton />;
@@ -124,8 +128,6 @@ export default function TodoApp() {
     );
   }
 
-  const stats = getStats();
-
   return (
     <div className="space-y-6">
       {/* Stats display */}
@@ -136,16 +138,15 @@ export default function TodoApp() {
         </div>
       )}
 
-      {/* Delete completed button - only show if there are completed todos */}
-      {stats.completed > 0 && (
-        <div onClick={handleDeleteCompleted}>
-          <DeleteCompleted />
-        </div>
-      )}
-
       <div className="p-4 space-y-4 w-full max-w-sm mx-auto">
         {/* Todo input form */}
         <TodoInput onAdd={handleCreateTodo} />
+
+        {/* Todo actions - separate component for better separation of concerns */}
+        <TodoActions
+          onDeleteCompleted={handleDeleteCompleted}
+          completedCount={stats.completed}
+        />
 
         {/* Todo list */}
         {todos.length === 0 ? (
